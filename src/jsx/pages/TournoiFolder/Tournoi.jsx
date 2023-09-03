@@ -1,30 +1,47 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers'
-import { Button } from '@mui/material'
+import {
+  Box,
+  Button,
+  Chip,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { fr } from 'date-fns/locale'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import dayjs from 'dayjs'
 
 const Tournoi = () => {
   const location = useLocation()
   const navigate = useNavigate()
-
+  const [staffList, setStaffList] = useState([])
+  const getStaff = () => {
+    axios
+      .get('http://127.0.0.1:3698/users', {
+        params: { filter: { supprime: null, role: 'STAFF' } },
+      })
+      .then((response) => {
+        setStaffList(response.data)
+      })
+  }
   const { control, handleSubmit, setError, reset, watch } = useForm({
     defaultValues: {
       libelle: location.state ? location.state.tournoi.libelle : '',
       type: location.state ? location.state.tournoi.type : '',
       startDate: location.state ? location.state.tournoi.startDate : null,
       endDate: location.state ? location.state.tournoi.endDate : null,
+      staff: location.state ? location.state.tournoi.staff._id : null,
     },
   })
 
   const action = (data) => {
-    const { libelle, type, startDate, endDate } = data
+    const { libelle, type, startDate, endDate, staff } = data
     if (location.state) {
       axios
         .put('http://127.0.0.1:3698/tournois', {
@@ -33,6 +50,7 @@ const Tournoi = () => {
           type,
           startDate,
           endDate,
+          staff: staff,
         })
         .then((response) => {
           Swal.fire('Tournoi modifié')
@@ -45,13 +63,18 @@ const Tournoi = () => {
           type,
           startDate,
           endDate,
+          staff: staff,
         })
-        .then((response) => {
+        .then(() => {
           Swal.fire('Tournoi crée')
           reset({})
         })
     }
   }
+
+  useEffect(() => {
+    getStaff()
+  }, [])
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
       <div>
@@ -95,6 +118,32 @@ const Tournoi = () => {
               </div>
             )}
           />
+          <Controller
+            control={control}
+            name="staff"
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <FormControl fullWidth>
+                <InputLabel id="staff">liste des staff</InputLabel>
+                <Select
+                  labelId="staff"
+                  id="staff"
+                  value={value}
+                  label="Liste des staff"
+                  onChange={(event) => {
+                    onChange(event.target.value)
+                  }}
+                >
+                  {staffList.map((e) => (
+                    <MenuItem key={e._id} value={e._id}>
+                      {e.username}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {error && <span style={{ color: 'red' }}>{error.message}</span>}
+              </FormControl>
+            )}
+          />
+
           <Controller
             control={control}
             name="startDate"
@@ -143,7 +192,7 @@ const Tournoi = () => {
             )}
           />
           <Button variant="contained" type="submit" className="btn btn-primary">
-            Sign in
+            Ajouter
           </Button>
         </form>
       </div>

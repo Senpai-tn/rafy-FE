@@ -1,21 +1,23 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import FilteringTable from '../../components/table/FilteringTable/FilteringTable'
 import { ColumnFilter } from '../../components/table/FilteringTable/ColumnFilter'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 
-const ListAction = () => {
+const ListActionPerMatch = () => {
   const [tournois, setTournois] = useState([])
   const [selected, setSelected] = useState(null)
   const [type, setType] = useState('')
   const navigate = useNavigate()
-
+  const location = useLocation()
   const getListTournoi = () => {
     axios
       .get('http://127.0.0.1:3698/actions', {
-        params: { filter: { supprime: null } },
+        params: {
+          filter: { supprime: null, match: location.state.object._id },
+        },
       })
       .then((response) => {
         setTournois(response.data)
@@ -97,4 +99,4 @@ const ListAction = () => {
   )
 }
 
-export default ListAction
+export default ListActionPerMatch

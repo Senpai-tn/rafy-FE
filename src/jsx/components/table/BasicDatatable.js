@@ -1,44 +1,43 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const BasicDatatable = () => {
   const [data, setData] = useState(
-    document.querySelectorAll("#job_data tbody tr")
-  );
-  const sort = 5;
-  const activePag = useRef(0);
-  const [test, settest] = useState(0);
+    document.querySelectorAll('#job_data tbody tr')
+  )
+  const sort = 5
+  const activePag = useRef(0)
+  const [test, settest] = useState(0)
 
   // Active data
   const chageData = (frist, sec) => {
     for (var i = 0; i < data.length; ++i) {
       if (i >= frist && i < sec) {
-        data[i].classList.remove("d-none");
+        data[i].classList.remove('d-none')
       } else {
-        data[i].classList.add("d-none");
+        data[i].classList.add('d-none')
       }
     }
-  };
+  }
   // use effect
-  useEffect(() => {
-    setData(document.querySelectorAll("#job_data tbody tr"));
-   // chackboxFun();
-  }, [test]);
+  // useEffect(() => {
+  //   setData(document.querySelectorAll("#job_data tbody tr"));
+  //  // chackboxFun();
+  // }, [test]);
 
   // Active pagginarion
-  activePag.current === 0 && chageData(0, sort);
+  activePag.current === 0 && chageData(0, sort)
   // paggination
   let paggination = Array(Math.ceil(data.length / sort))
     .fill()
-    .map((_, i) => i + 1);
+    .map((_, i) => i + 1)
 
   // Active paggination & chage data
   const onClick = (i) => {
-    activePag.current = i;
-    chageData(activePag.current * sort, (activePag.current + 1) * sort);
-    settest(i);
-  };
- 
+    activePag.current = i
+    chageData(activePag.current * sort, (activePag.current + 1) * sort)
+    settest(i)
+  }
 
   return (
     <div className="col-12">
@@ -57,22 +56,22 @@ const BasicDatatable = () => {
               >
                 <thead>
                   <tr role="row">
-                    <th className="sorting_asc" style={{ width: "177px" }}>
+                    <th className="sorting_asc" style={{ width: '177px' }}>
                       Name
                     </th>
-                    <th className="sorting" style={{ width: "278px" }}>
+                    <th className="sorting" style={{ width: '278px' }}>
                       Position
                     </th>
-                    <th className="sorting" style={{ width: "128px" }}>
+                    <th className="sorting" style={{ width: '128px' }}>
                       Office
                     </th>
-                    <th className="sorting" style={{ width: "46px" }}>
+                    <th className="sorting" style={{ width: '46px' }}>
                       Age
                     </th>
-                    <th className="sorting" style={{ width: "114px" }}>
+                    <th className="sorting" style={{ width: '114px' }}>
                       Start date
                     </th>
-                    <th className="sorting" style={{ width: "110px" }}>
+                    <th className="sorting" style={{ width: '110px' }}>
                       Salary
                     </th>
                   </tr>
@@ -160,14 +159,13 @@ const BasicDatatable = () => {
                     <td>$433,060</td>
                   </tr>
                 </tbody>
-               
               </table>
               <div className="d-sm-flex text-center justify-content-between align-items-center mt-3 mb-md-0 mb-2">
                 <div className="dataTables_info">
-                  Showing {activePag.current * sort + 1} to{" "}
+                  Showing {activePag.current * sort + 1} to{' '}
                   {data.length > (activePag.current + 1) * sort
                     ? (activePag.current + 1) * sort
-                    : data.length}{" "}
+                    : data.length}{' '}
                   of {data.length} entries
                 </div>
                 <div
@@ -181,7 +179,10 @@ const BasicDatatable = () => {
                       activePag.current > 0 && onClick(activePag.current - 1)
                     }
                   >
-                    <i className="fa fa-angle-double-left" aria-hidden="true"></i>
+                    <i
+                      className="fa fa-angle-double-left"
+                      aria-hidden="true"
+                    ></i>
                   </Link>
                   <span>
                     {paggination.map((number, i) => (
@@ -189,7 +190,7 @@ const BasicDatatable = () => {
                         key={i}
                         to="/table-datatable-basic"
                         className={`paginate_button  ${
-                          activePag.current === i ? "current" : ""
+                          activePag.current === i ? 'current' : ''
                         } `}
                         onClick={() => onClick(i)}
                       >
@@ -205,7 +206,10 @@ const BasicDatatable = () => {
                       onClick(activePag.current + 1)
                     }
                   >
-                    <i className="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <i
+                      className="fa fa-angle-double-right"
+                      aria-hidden="true"
+                    ></i>
                   </Link>
                 </div>
               </div>
@@ -214,7 +218,7 @@ const BasicDatatable = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default BasicDatatable;
+export default BasicDatatable

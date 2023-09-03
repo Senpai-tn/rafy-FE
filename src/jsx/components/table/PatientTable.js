@@ -1,67 +1,67 @@
-import React, { useState, useRef, useEffect } from "react";
-import {  Dropdown } from "react-bootstrap";
+import React, { useState, useRef, useEffect } from 'react'
+import { Dropdown } from 'react-bootstrap'
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom'
 // import data from "./tableData.js";
 
 const PatientTable = () => {
   const [data, setData] = useState(
-    document.querySelectorAll("#patientTable_basic_table tbody tr")
-  );
-  const sort = 5;
-  const activePag = useRef(0);
-  const [test, settest] = useState(0);
+    document.querySelectorAll('#patientTable_basic_table tbody tr')
+  )
+  const sort = 5
+  const activePag = useRef(0)
+  const [test, settest] = useState(0)
 
   // Active data
   const chageData = (frist, sec) => {
     for (var i = 0; i < data.length; ++i) {
       if (i >= frist && i < sec) {
-        data[i].classList.remove("d-none");
+        data[i].classList.remove('d-none')
       } else {
-        data[i].classList.add("d-none");
+        data[i].classList.add('d-none')
       }
     }
-  };
+  }
   // use effect
-  useEffect(() => {
-    setData(document.querySelectorAll("#patientTable_basic_table tbody tr"));
-   // chackboxFun();
-  }, [test]);
+  // useEffect(() => {
+  //   setData(document.querySelectorAll("#patientTable_basic_table tbody tr"));
+  //  // chackboxFun();
+  // }, [test]);
 
   // Active pagginarion
-  activePag.current === 0 && chageData(0, sort);
+  activePag.current === 0 && chageData(0, sort)
   // paggination
   let paggination = Array(Math.ceil(data.length / sort))
     .fill()
-    .map((_, i) => i + 1);
+    .map((_, i) => i + 1)
 
   // Active paggination & chage data
   const onClick = (i) => {
-    activePag.current = i;
-    chageData(activePag.current * sort, (activePag.current + 1) * sort);
-    settest(i);
-  };
-  const chackbox = document.querySelectorAll(".sorting_1 input");
-  const motherChackBox = document.querySelector(".sorting_asc input");
+    activePag.current = i
+    chageData(activePag.current * sort, (activePag.current + 1) * sort)
+    settest(i)
+  }
+  const chackbox = document.querySelectorAll('.sorting_1 input')
+  const motherChackBox = document.querySelector('.sorting_asc input')
   const chackboxFun = (type) => {
     for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
+      const element = chackbox[i]
+      if (type === 'all') {
         if (motherChackBox.checked) {
-          element.checked = true;
+          element.checked = true
         } else {
-          element.checked = false;
+          element.checked = false
         }
       } else {
         if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
+          motherChackBox.checked = false
+          break
         } else {
-          motherChackBox.checked = true;
+          motherChackBox.checked = true
         }
       }
     }
-  };
+  }
   return (
     <div className="col-12">
       <div className="card">
@@ -93,7 +93,7 @@ const PatientTable = () => {
                       <div className="form-check custom-checkbox">
                         <input
                           type="checkbox"
-                          onClick={() => chackboxFun("all")}
+                          onClick={() => chackboxFun('all')}
                           className="form-check-input"
                           id="checkAll"
                           required
@@ -820,10 +820,10 @@ const PatientTable = () => {
 
               <div className="d-sm-flex text-center justify-content-between align-items-center mt-3 mb-2">
                 <div className="dataTables_info">
-                  Showing {activePag.current * sort + 1} to{" "}
+                  Showing {activePag.current * sort + 1} to{' '}
                   {data.length > (activePag.current + 1) * sort
                     ? (activePag.current + 1) * sort
-                    : data.length}{" "}
+                    : data.length}{' '}
                   of {data.length} entries
                 </div>
                 <div
@@ -837,7 +837,10 @@ const PatientTable = () => {
                       activePag.current > 0 && onClick(activePag.current - 1)
                     }
                   >
-                    <i className="fa fa-angle-double-left" aria-hidden="true"></i>
+                    <i
+                      className="fa fa-angle-double-left"
+                      aria-hidden="true"
+                    ></i>
                   </Link>
                   <span>
                     {paggination.map((number, i) => (
@@ -845,7 +848,7 @@ const PatientTable = () => {
                         key={i}
                         to="/table-datatable-basic"
                         className={`paginate_button  ${
-                          activePag.current === i ? "current" : ""
+                          activePag.current === i ? 'current' : ''
                         } `}
                         onClick={() => onClick(i)}
                       >
@@ -861,7 +864,10 @@ const PatientTable = () => {
                       onClick(activePag.current + 1)
                     }
                   >
-                    <i className="fa fa-angle-double-right" aria-hidden="true"></i>
+                    <i
+                      className="fa fa-angle-double-right"
+                      aria-hidden="true"
+                    ></i>
                   </Link>
                 </div>
               </div>
@@ -870,7 +876,7 @@ const PatientTable = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PatientTable;
+export default PatientTable

@@ -35,6 +35,7 @@ const Equipe = () => {
 
   const action = (data) => {
     const { nom, listeJoueurs } = data
+
     if (location.state) {
       axios
         .put('http://127.0.0.1:3698/equipes', {

@@ -1,64 +1,60 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
 const InboxMessage = () => {
   const [data, setData] = useState(
-    document.querySelectorAll("#patientTable_basic_table tbody tr")
-  );
-  const sort = 5;
-  const activePag = useRef(0);
-  const [test, settest] = useState(0);
+    document.querySelectorAll('#patientTable_basic_table tbody tr')
+  )
+  const sort = 5
+  const activePag = useRef(0)
+  const [test, settest] = useState(0)
 
   // Active data
   const chageData = (frist, sec) => {
     for (var i = 0; i < data.length; ++i) {
       if (i >= frist && i < sec) {
-        data[i].classList.remove("d-none");
+        data[i].classList.remove('d-none')
       } else {
-        data[i].classList.add("d-none");
+        data[i].classList.add('d-none')
       }
     }
-  };
+  }
   // use effect
-  useEffect(() => {
-    setData(document.querySelectorAll("#patientTable_basic_table tbody tr"));
-    chackboxFun();
-  }, [test]);
 
   // Active pagginarion
-  activePag.current === 0 && chageData(0, sort);
+  activePag.current === 0 && chageData(0, sort)
   // paggination
   let paggination = Array(Math.ceil(data.length / sort))
     .fill()
-    .map((_, i) => i + 1);
+    .map((_, i) => i + 1)
 
   // Active paggination & chage data
   const onClick = (i) => {
-    activePag.current = i;
-    chageData(activePag.current * sort, (activePag.current + 1) * sort);
-    settest(i);
-  };
-  const chackbox = document.querySelectorAll(".sorting_1 input");
-  const motherChackBox = document.querySelector(".sorting_asc input");
+    activePag.current = i
+    chageData(activePag.current * sort, (activePag.current + 1) * sort)
+    settest(i)
+  }
+  const chackbox = document.querySelectorAll('.sorting_1 input')
+  const motherChackBox = document.querySelector('.sorting_asc input')
   const chackboxFun = (type) => {
     for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
+      const element = chackbox[i]
+      if (type === 'all') {
         if (motherChackBox.checked) {
-          element.checked = true;
+          element.checked = true
         } else {
-          element.checked = false;
+          element.checked = false
         }
       } else {
         if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
+          motherChackBox.checked = false
+          break
         } else {
-          motherChackBox.checked = true;
+          motherChackBox.checked = true
         }
       }
     }
-  };
+  }
 
   return (
     <div className="email-list mt-3">
@@ -110,7 +106,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Almost unorthographic life One day however a small line of blind
               text by the name of Lorem Ipsum decided to leave for the far World
@@ -139,7 +135,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"email-read"} className="col-mail col-mail-2">
+          <Link to={'email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Pointing has no control about the blind texts it is an almost
               unorthographic life One day however a small line of blind text by
@@ -197,7 +193,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Ingredia Nutrisha, A collection of textile samples lay spread out
               on the table - Samsa was a travelling salesman - and above it
@@ -226,7 +222,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Almost unorthographic life One day however a small line of blind
               text by the name of Lorem Ipsum decided to leave for the far World
@@ -371,7 +367,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Pointing has no control about the blind texts it is an almost
               unorthographic life One day however a small line of blind text by
@@ -400,7 +396,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Even the all-powerful Pointing has no control about the blind
               texts it is an almost unorthographic life One day however a small
@@ -429,7 +425,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Ingredia Nutrisha, A collection of textile samples lay spread out
               on the table - Samsa was a travelling salesman - and above it
@@ -458,7 +454,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Almost unorthographic life One day however a small line of blind
               text by the name of Lorem Ipsum decided to leave for the far World
@@ -487,7 +483,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Pointing has no control about the blind texts it is an almost
               unorthographic life One day however a small line of blind text by
@@ -516,7 +512,7 @@ const InboxMessage = () => {
               </button>
             </div>
           </div>
-          <Link to={"/email-read"} className="col-mail col-mail-2">
+          <Link to={'/email-read'} className="col-mail col-mail-2">
             <div className="subject">
               Even the all-powerful Pointing has no control about the blind
               texts it is an almost unorthographic life One day however a small
@@ -643,7 +639,7 @@ const InboxMessage = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default InboxMessage;
+export default InboxMessage

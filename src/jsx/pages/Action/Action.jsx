@@ -6,24 +6,28 @@ import { useEffect } from 'react'
 import { useState } from 'react'
 import { Button } from 'react-bootstrap'
 import { Controller, useForm } from 'react-hook-form'
+import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 
 const Action = () => {
+  const { user } = useSelector((state) => state)
   const location = useLocation()
   const navigate = useNavigate()
   const [matchs, setMatchs] = useState([])
 
-  const { control, handleSubmit, setError, reset } = useForm({
+  const { control, handleSubmit, setError, reset, watch } = useForm({
     defaultValues: {
       match: location.state ? location.state.tournoi.match : null,
-      type: location.state ? location.state.tournoi.type : null,
+      type: location.state ? location.state.tournoi.type : '',
+      score: location.state ? location.state.tournoi.score : '',
       temps: location.state ? location.state.tournoi.temps : null,
     },
   })
 
   const action = (data) => {
-    const { match, type, temps } = data
+    const { match, type, temps, score } = data
+
     if (location.state) {
       axios
         .put('http://127.0.0.1:3698/actions', {
@@ -31,6 +35,7 @@ const Action = () => {
           match,
           type,
           temps,
+          score,
         })
         .then((response) => {
           Swal.fire('Tournoi modifié')
@@ -42,6 +47,7 @@ const Action = () => {
           match,
           type,
           temps,
+          score,
         })
         .then(() => {
           Swal.fire('Action crée')
@@ -70,7 +76,8 @@ const Action = () => {
         <Controller
           control={control}
           name="match"
-          render={({ field: { value, onChange } }) => (
+          rules={{ required: { value: true, message: 'Champs obligatoire' } }}
+          render={({ field: { value, onChange }, fieldState: { error } }) => (
             <FormControl fullWidth>
               <InputLabel id="match">Match</InputLabel>
               <Select
@@ -82,16 +89,22 @@ const Action = () => {
                   onChange(v.target.value)
                 }}
               >
-                {matchs.map((m) => (
-                  <MenuItem value={m._id} key={m._id}>
-                    {dayjs(m.date).format('DD-MM-YYYY') +
-                      ' les équipes : ' +
-                      m.listeEquipes.map((v) => {
-                        return v.nom + '  '
-                      })}
-                  </MenuItem>
-                ))}
+                {matchs
+                  .filter((m) => {
+                    console.log(m.arbitre, user._id.toString())
+                    return m.arbitre == user._id.toString()
+                  })
+                  .map((m) => (
+                    <MenuItem value={m._id} key={m._id}>
+                      {dayjs(m.date).format('DD-MM-YYYY') +
+                        ' les équipes : ' +
+                        m.listeEquipes.map((v) => {
+                          return v.nom + '  '
+                        })}
+                    </MenuItem>
+                  ))}
               </Select>
+              {error && <span style={{ color: 'red' }}>{error.message}</span>}
             </FormControl>
           )}
         />
@@ -114,10 +127,30 @@ const Action = () => {
             </div>
           )}
         />
+        {watch('type') === 'score' && (
+          <Controller
+            control={control}
+            name="score"
+            rules={{ required: { value: true, message: 'Champs obligatoire' } }}
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <div className="form-group" style={{ margin: '10px' }}>
+                <label htmlFor="score">Score</label>
+                <input
+                  id="score"
+                  value={value}
+                  onChange={onChange}
+                  type="text"
+                  className="form-control input-rounded"
+                  placeholder="Score"
+                />
+                {error && <span style={{ color: 'red' }}>{error.message}</span>}
+              </div>
+            )}
+          />
+        )}
         <Controller
           control={control}
           name="temps"
-          rules={{ required: { value: true, message: 'Champs obligatoire' } }}
           render={({ field: { value, onChange }, fieldState: { error } }) => (
             <div className="form-group" style={{ margin: '10px' }}>
               <label htmlFor="temps">Temps</label>
@@ -135,7 +168,7 @@ const Action = () => {
         />
 
         <Button variant="contained" type="submit" className="btn btn-primary">
-          Sign in
+          Ajouter
         </Button>
       </form>
     </div>

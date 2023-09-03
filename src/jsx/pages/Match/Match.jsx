@@ -1,4 +1,8 @@
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers'
+import {
+  DatePicker,
+  DateTimePicker,
+  LocalizationProvider,
+} from '@mui/x-date-pickers'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -13,6 +17,7 @@ import {
   MenuItem,
   Select,
   Stack,
+  TextField,
 } from '@mui/material'
 import { useState } from 'react'
 import axios from 'axios'
@@ -24,6 +29,7 @@ const Match = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [matchs, setMatchs] = useState([])
+  const [arbitreList, setArbitreList] = useState([])
   const [open, setOpen] = React.useState(false)
   const user = useSelector((state) => state.user)
 
@@ -35,8 +41,10 @@ const Match = () => {
           date: location.state.match.date,
           listeEquipes: location.state.match.listeEquipes.map(({ _id }) => _id),
           tournoi: location.state.match.tournoi,
+          arbitre: location.state.match.arbitre,
+          duree: location.state.match.duree,
         }
-      : { date: null, listeEquipes: [], tournoi: null },
+      : { date: null, listeEquipes: [], tournoi: null, arbitre: '', duree: '' },
   })
 
   const getListTournoi = () => {
@@ -50,7 +58,7 @@ const Match = () => {
   }
 
   const action = (data) => {
-    const { date, listeEquipes, tournoi } = data
+    const { date, listeEquipes, tournoi, arbitre, duree } = data
     if (listeEquipes.length !== 2) {
       setError('listeEquipes', { message: 'Vous devez choisir 2 équipes' })
     } else {
@@ -62,6 +70,8 @@ const Match = () => {
             date,
             listeEquipes,
             tournoi,
+            arbitre,
+            duree: parseInt(duree),
           })
           .then(() => {
             Swal.fire('Match modifié')
@@ -74,6 +84,8 @@ const Match = () => {
             date,
             listeEquipes,
             tournoi,
+            arbitre,
+            duree: parseInt(duree),
           })
           .then(() => {
             Swal.fire('Match crée')
@@ -95,7 +107,18 @@ const Match = () => {
   useEffect(() => {
     getListTournoi()
     getListEquipes()
+    getStaff()
   }, [])
+
+  const getStaff = () => {
+    axios
+      .get('http://127.0.0.1:3698/users', {
+        params: { filter: { supprime: null, role: 'ARBITRE' } },
+      })
+      .then((response) => {
+        setArbitreList(response.data)
+      })
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
@@ -191,7 +214,7 @@ const Match = () => {
             />
             <Controller
               control={control}
-              name="date"
+              name="arbitre"
               rules={{
                 required: { value: true, message: 'Champs obligatoire' },
               }}
@@ -199,27 +222,76 @@ const Match = () => {
                 field: { value, onChange },
                 fieldState: { error },
               }) => (
-                <>
-                  <DatePicker
-                    sx={{
-                      m: '10px',
-
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '50px',
-                        bgcolor: 'rgba(255,255,255,0.11)',
-                      },
+                <FormControl fullWidth>
+                  <InputLabel id="arbitre">Arbitre</InputLabel>
+                  <Select
+                    labelId="arbitre"
+                    id="arbitre"
+                    value={value}
+                    label="Arbitre"
+                    onChange={(event) => {
+                      onChange(event.target.value)
                     }}
-                    value={value ? new Date(value) : null}
-                    onChange={onChange}
-                    label="Date de début"
-                  />
-
+                  >
+                    {arbitreList.map((e) => (
+                      <MenuItem key={e._id} value={e._id}>
+                        {e.username}
+                      </MenuItem>
+                    ))}
+                  </Select>
                   {error && (
                     <span style={{ color: 'red' }}>{error.message}</span>
                   )}
-                </>
+                </FormControl>
               )}
             />
+            <Stack direction={'row'} alignItems={'center'}>
+              <Controller
+                control={control}
+                name="date"
+                rules={{
+                  required: { value: true, message: 'Champs obligatoire' },
+                }}
+                render={({
+                  field: { value, onChange },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <DateTimePicker
+                      sx={{
+                        m: '10px',
+
+                        '& .MuiOutlinedInput-root': {
+                          borderRadius: '50px',
+                          bgcolor: 'rgba(255,255,255,0.11)',
+                        },
+                      }}
+                      value={value ? new Date(value) : null}
+                      onChange={onChange}
+                      label="Date de début"
+                    />
+
+                    {error && (
+                      <span style={{ color: 'red' }}>{error.message}</span>
+                    )}
+                  </>
+                )}
+              />
+              {'Durée (minutes) :      '}
+              <Controller
+                control={control}
+                name="duree"
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    id="duree"
+                    value={value}
+                    onChange={onChange}
+                    type="number"
+                    sx={{ width: '57px' }}
+                  />
+                )}
+              />
+            </Stack>
             <Box>
               <Button
                 onClick={() => reset({})}

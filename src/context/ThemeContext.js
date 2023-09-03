@@ -219,34 +219,34 @@ const ThemeContextProvider = (props) => {
     changeDirectionLayout(setAttr)
   }
 
-  useEffect(() => {
-    const body = document.querySelector('body')
-    body.setAttribute('data-typography', 'Nunito')
-    body.setAttribute('data-theme-version', 'light')
-    body.setAttribute('data-layout', 'vertical')
-    body.setAttribute('data-primary', 'color_1')
-    body.setAttribute('data-nav-headerbg', 'color_1')
-    body.setAttribute('data-headerbg', 'color_1')
-    body.setAttribute('data-sidebar-style', 'overlay')
-    body.setAttribute('data-sibebarbg', 'color_1')
-    body.setAttribute('data-primary', 'color_1')
-    body.setAttribute('data-sidebar-position', 'fixed')
-    body.setAttribute('data-header-position', 'fixed')
-    body.setAttribute('data-container', 'wide')
-    body.setAttribute('direction', 'ltr')
-    let resizeWindow = () => {
-      setWindowWidth(window.innerWidth)
-      setWindowHeight(window.innerHeight)
-      window.innerWidth >= 768 && window.innerWidth < 1024
-        ? body.setAttribute('data-sidebar-style', 'mini')
-        : window.innerWidth <= 768
-        ? body.setAttribute('data-sidebar-style', 'overlay')
-        : body.setAttribute('data-sidebar-style', 'full')
-    }
-    resizeWindow()
-    window.addEventListener('resize', resizeWindow)
-    return () => window.removeEventListener('resize', resizeWindow)
-  }, [])
+  // useEffect(() => {
+  //   const body = document.querySelector('body')
+  //   body.setAttribute('data-typography', 'Nunito')
+  //   body.setAttribute('data-theme-version', 'light')
+  //   body.setAttribute('data-layout', 'vertical')
+  //   body.setAttribute('data-primary', 'color_1')
+  //   body.setAttribute('data-nav-headerbg', 'color_1')
+  //   body.setAttribute('data-headerbg', 'color_1')
+  //   body.setAttribute('data-sidebar-style', 'overlay')
+  //   body.setAttribute('data-sibebarbg', 'color_1')
+  //   body.setAttribute('data-primary', 'color_1')
+  //   body.setAttribute('data-sidebar-position', 'fixed')
+  //   body.setAttribute('data-header-position', 'fixed')
+  //   body.setAttribute('data-container', 'wide')
+  //   body.setAttribute('direction', 'ltr')
+  //   let resizeWindow = () => {
+  //     setWindowWidth(window.innerWidth)
+  //     setWindowHeight(window.innerHeight)
+  //     window.innerWidth >= 768 && window.innerWidth < 1024
+  //       ? body.setAttribute('data-sidebar-style', 'mini')
+  //       : window.innerWidth <= 768
+  //       ? body.setAttribute('data-sidebar-style', 'overlay')
+  //       : body.setAttribute('data-sidebar-style', 'full')
+  //   }
+  //   resizeWindow()
+  //   window.addEventListener('resize', resizeWindow)
+  //   return () => window.removeEventListener('resize', resizeWindow)
+  // }, [])
 
   return (
     <ThemeContext.Provider

@@ -14,6 +14,7 @@ import './filtering.css'
 import { Button } from '@mui/material'
 import dayjs from 'dayjs'
 import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 export const FilteringTable = ({
   title,
@@ -24,6 +25,7 @@ export const FilteringTable = ({
   onBlock,
   setType,
 }) => {
+  const navigate = useNavigate()
   const tableInstance = useTable(
     {
       columns,
@@ -89,43 +91,63 @@ export const FilteringTable = ({
               </thead>
               <tbody {...getTableBodyProps()} className="">
                 {page.map((row) => {
-                  console.log(row.original.match)
                   prepareRow(row)
                   return (
                     <tr {...row.getRowProps()}>
                       {row.cells.map((cell) => {
                         return (
                           <td
+                            onClick={() => {
+                              if (cell.column.clickable) {
+                                console.log(cell.column._id)
+                                navigate(cell.column.cible, {
+                                  state: { object: row.original },
+                                })
+                              }
+                            }}
                             style={{
+                              cursor: cell.column.clickable
+                                ? 'pointer'
+                                : 'auto',
                               display: cell.column.id === '_id' ? 'none' : '',
                             }}
                             {...cell.getCellProps()}
                           >
-                            {cell.column.type === 'action'
-                              ? dayjs(row.original.match.date).format(
-                                  'DD-MM-YYYY'
-                                ) +
-                                ' les équipes : ' +
-                                row.original.match.listeEquipes.map((v) => {
-                                  return v.nom + '  '
-                                })
-                              : cell.column.type === 'date'
-                              ? dayjs(
-                                  cell.render('Cell').props.cell.value
-                                ).format('DD-MM-YYYY')
-                              : cell.column.type === 'array'
-                              ? cell
-                                  .render('Cell')
-                                  .props.cell.value.map((v) => {
-                                    return v[cell.column.field] + ' , '
-                                  })
-                              : cell.column.type === 'object'
-                              ? dayjs(
-                                  cell.render('Cell').props.cell.value[
-                                    cell.column.field
-                                  ]
-                                ).format('DD-MM-YYYY')
-                              : cell.render('Cell')}
+                            {cell.column.type === 'role' ? (
+                              <>
+                                <img
+                                  height={'35px'}
+                                  width={'35px'}
+                                  style={{ marginRight: '10px' }}
+                                  src={'./' + row.original.role + '.png'}
+                                />
+                                {row.original.role}
+                              </>
+                            ) : cell.column.type === 'action' ? (
+                              dayjs(row.original.match.date).format(
+                                'DD-MM-YYYY'
+                              ) +
+                              ' les équipes : ' +
+                              row.original.match.listeEquipes.map((v) => {
+                                return v.nom + '  '
+                              })
+                            ) : cell.column.type === 'date' ? (
+                              dayjs(
+                                cell.render('Cell').props.cell.value
+                              ).format('DD-MM-YYYY')
+                            ) : cell.column.type === 'array' ? (
+                              cell.render('Cell').props.cell.value.map((v) => {
+                                return v[cell.column.field] + ' , '
+                              })
+                            ) : cell.column.type === 'object' ? (
+                              dayjs(
+                                cell.render('Cell').props.cell.value[
+                                  cell.column.field
+                                ]
+                              ).format('DD-MM-YYYY')
+                            ) : (
+                              cell.render('Cell')
+                            )}
                           </td>
                         )
                       })}
@@ -133,7 +155,7 @@ export const FilteringTable = ({
                         {user.role === 'SUPER_ADMIN' && onUpdate && (
                           <Button
                             onClick={() => {
-                              onUpdate(row.values)
+                              onUpdate(row.original)
                               setType('Modifier')
                             }}
                             color="warning"
@@ -146,7 +168,7 @@ export const FilteringTable = ({
                         {user.role === 'SUPER_ADMIN' && onDelete && (
                           <Button
                             onClick={() => {
-                              onDelete(row.values)
+                              onUpdate(row.original)
                               setType('Supprimer')
                             }}
                             color="error"
@@ -159,8 +181,8 @@ export const FilteringTable = ({
                         {user.role === 'SUPER_ADMIN' && onBlock && (
                           <Button
                             onClick={() => {
-                              onDelete(row.values)
-                              setType('Supprimer')
+                              onUpdate(row.original)
+                              setType('Bloquer')
                             }}
                             color="error"
                             variant="contained"

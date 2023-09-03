@@ -75,13 +75,14 @@ const ListeMatchs = () => {
             Footer: 'Id',
             accessor: '_id',
             Filter: ColumnFilter,
-            //disableFilters: true,
           },
           {
             Header: 'Date',
             accessor: 'date',
             type: 'date',
             Filter: ColumnFilter,
+            clickable: true,
+            cible: '/actions_match',
           },
           {
             Header: 'liste des Equipes',

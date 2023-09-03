@@ -73,6 +73,9 @@ const ListTournois = () => {
             Header: 'Libellé',
             accessor: 'libelle',
             type: 'text',
+            clickable: true,
+            cible: '/matchs_tournoi',
+
             Filter: ColumnFilter,
           },
           {
@@ -88,7 +91,7 @@ const ListTournois = () => {
             Filter: ColumnFilter,
           },
           {
-            Header: 'Date de début',
+            Header: 'Date de fin',
             accessor: 'endDate',
             type: 'date',
             Filter: ColumnFilter,

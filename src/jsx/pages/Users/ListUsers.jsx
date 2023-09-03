@@ -27,7 +27,7 @@ const ListUsers = () => {
     getListUsers()
   }, [])
 
-  useEffect(() => {
+  const a = () => {
     if (type === 'Supprimer') {
       Swal.fire({
         title: 'Are you sure?',
@@ -52,12 +52,19 @@ const ListUsers = () => {
       })
       setType('')
     }
+    if (type === 'Modifier') {
+    }
+  }
+
+  useEffect(() => {
+    a()
   }, [type])
   return (
     <div>
       <FilteringTable
         title={'Liste des Tournois'}
         onDelete={setSelected}
+        onUpdate={setSelected}
         setType={setType}
         columns={[
           {
@@ -83,7 +90,7 @@ const ListUsers = () => {
           {
             Header: 'Rôle',
             accessor: 'role',
-            type: 'text',
+            type: 'role',
             Filter: ColumnFilter,
           },
         ]}

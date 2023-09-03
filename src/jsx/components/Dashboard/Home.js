@@ -6,6 +6,8 @@ import pMinDelay from 'p-min-delay'
 //Import Components
 import { ThemeContext } from '../../../context/ThemeContext'
 import axios from 'axios'
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import { Controller, useForm } from 'react-hook-form'
 
 const TotalInvoices = loadable(() =>
   pMinDelay(import('./Dashboard/TotalInvoices'), 500)
@@ -21,6 +23,9 @@ const Totalinvoicessent = loadable(() =>
 )
 
 const Home = () => {
+  const { control, handleSubmit, reset, setError, watch } = useForm({
+    defaultValues: { tournoi: null },
+  })
   const [matchs, setMatchs] = useState([])
   const [tournois, setTournois] = useState([])
   const [joueurs, setJoueurs] = useState([])
@@ -237,6 +242,60 @@ const Home = () => {
               </div>
             </div>
           </div>
+          <div className="row">
+            <h3>Classement</h3>
+            <Controller
+              control={control}
+              rules={{
+                required: { value: true, message: 'Champs obligatoire' },
+              }}
+              name="tournoi"
+              render={({
+                field: { value, onChange },
+                fieldState: { error },
+              }) => (
+                <FormControl fullWidth>
+                  <InputLabel id="tournoi">Tournoi</InputLabel>
+                  <Select
+                    labelId="tournoi"
+                    id="tournoi"
+                    value={value}
+                    label="Tournoi"
+                    onChange={(v) => {
+                      onChange(v.target.value)
+                    }}
+                    renderValue={(v) => v.libelle}
+                  >
+                    {tournois.map((t) => (
+                      <MenuItem value={t} key={t._id}>
+                        {t.libelle}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {error && (
+                    <span style={{ color: 'red' }}>{error.message}</span>
+                  )}
+                </FormControl>
+              )}
+            />
+          </div>
+          {watch('tournoi') &&
+            watch('tournoi').classement &&
+            watch('tournoi')
+              .classement.sort((a, b) => {
+                return a.points > b.points ? -1 : 1
+              })
+              .map((classement, index) => {
+                return (
+                  <p style={{ fontWeight: 900, fontSize: 20 }}>
+                    <span>#{index + 1}</span>
+                    {` ${
+                      equipes.find((e) => e._id.toString() == classement.equipe)
+                        .nom
+                    } ${classement.points}\n`}
+                  </p>
+                )
+              })}
         </div>
       </div>
     </>
