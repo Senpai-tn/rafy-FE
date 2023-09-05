@@ -21,7 +21,7 @@ const ListeMatchs = () => {
         setMatchs(response.data)
       })
   }
-  const user = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state)
 
   useEffect(() => {
     getListTournoi()
@@ -30,13 +30,13 @@ const ListeMatchs = () => {
   useEffect(() => {
     if (type === 'Supprimer') {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Etes vous sur ?',
+        text: 'Vous ne pourrez pas revenir en arrière !',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'oui, supprime-le !',
       }).then((result) => {
         if (result.isConfirmed) {
           axios
@@ -47,7 +47,7 @@ const ListeMatchs = () => {
             })
             .then(() => {
               getListTournoi()
-              Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+              Swal.fire('Supprimé !', 'Votre donnée a été supprimé.', 'success')
             })
         }
       })
@@ -66,8 +66,14 @@ const ListeMatchs = () => {
     <div>
       <FilteringTable
         title={'Liste des Matchs'}
-        onUpdate={setSelected}
-        onDelete={setSelected}
+        onUpdate={
+          ['SUPER_ADMIN', 'ORGANISATEUR', 'STAFF'].includes(user.role) &&
+          setSelected
+        }
+        onDelete={
+          ['SUPER_ADMIN', 'ORGANISATEUR', 'STAFF'].includes(user.role) &&
+          setSelected
+        }
         setType={setType}
         columns={[
           {

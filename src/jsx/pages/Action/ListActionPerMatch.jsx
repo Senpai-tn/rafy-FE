@@ -31,13 +31,13 @@ const ListActionPerMatch = () => {
   useEffect(() => {
     if (type === 'Supprimer') {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Etes vous sur ?',
+        text: 'Vous ne pourrez pas revenir en arrière !',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'oui, supprime-le !',
       }).then((result) => {
         if (result.isConfirmed) {
           axios
@@ -47,7 +47,7 @@ const ListActionPerMatch = () => {
             })
             .then((response) => {
               getListTournoi()
-              Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+              Swal.fire('Supprimé !', 'Votre donnée a été supprimé.', 'success')
             })
         }
       })
@@ -58,7 +58,6 @@ const ListActionPerMatch = () => {
     <div>
       <FilteringTable
         title={'Liste des Actions'}
-        onDelete={setSelected}
         setType={setType}
         columns={[
           {

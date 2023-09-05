@@ -5,11 +5,13 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
 import { useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const ListTournois = () => {
   const [tournois, setTournois] = useState([])
   const [selected, setSelected] = useState(null)
   const [type, setType] = useState('')
+  const { user } = useSelector((state) => state)
   const navigate = useNavigate()
   const getListTournoi = () => {
     axios
@@ -28,13 +30,13 @@ const ListTournois = () => {
   useEffect(() => {
     if (type === 'Supprimer') {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Etes vous sur ?',
+        text: 'Vous ne pourrez pas revenir en arrière !',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'oui, supprime-le !',
       }).then((result) => {
         if (result.isConfirmed) {
           axios
@@ -44,7 +46,7 @@ const ListTournois = () => {
             })
             .then((response) => {
               getListTournoi()
-              Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+              Swal.fire('Supprimé !', 'Votre donnée a été supprimé.', 'success')
             })
         }
       })
@@ -58,8 +60,12 @@ const ListTournois = () => {
     <div>
       <FilteringTable
         title={'Liste des Tournois'}
-        onUpdate={setSelected}
-        onDelete={setSelected}
+        onUpdate={
+          ['SUPER_ADMIN', 'ORGANISATEUR'].includes(user.role) && setSelected
+        }
+        onDelete={
+          ['SUPER_ADMIN', 'ORGANISATEUR'].includes(user.role) && setSelected
+        }
         setType={setType}
         columns={[
           {

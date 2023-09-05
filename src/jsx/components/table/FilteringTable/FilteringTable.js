@@ -152,7 +152,7 @@ export const FilteringTable = ({
                         )
                       })}
                       <td>
-                        {user.role === 'SUPER_ADMIN' && onUpdate && (
+                        {onUpdate && (
                           <Button
                             onClick={() => {
                               onUpdate(row.original)
@@ -165,10 +165,10 @@ export const FilteringTable = ({
                             Modifier
                           </Button>
                         )}
-                        {user.role === 'SUPER_ADMIN' && onDelete && (
+                        {onDelete && (
                           <Button
                             onClick={() => {
-                              onUpdate(row.original)
+                              onDelete(row.original)
                               setType('Supprimer')
                             }}
                             color="error"
@@ -187,7 +187,7 @@ export const FilteringTable = ({
                             color="error"
                             variant="contained"
                           >
-                            Boquer
+                            Bloquer
                           </Button>
                         )}
                       </td>

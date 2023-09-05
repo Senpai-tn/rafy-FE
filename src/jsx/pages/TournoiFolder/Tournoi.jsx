@@ -36,7 +36,9 @@ const Tournoi = () => {
       type: location.state ? location.state.tournoi.type : '',
       startDate: location.state ? location.state.tournoi.startDate : null,
       endDate: location.state ? location.state.tournoi.endDate : null,
-      staff: location.state ? location.state.tournoi.staff._id : null,
+      staff: location.state
+        ? location.state.tournoi.staff && location.state.tournoi.staff._id
+        : null,
     },
   })
 
@@ -191,8 +193,13 @@ const Tournoi = () => {
               </>
             )}
           />
-          <Button variant="contained" type="submit" className="btn btn-primary">
-            Ajouter
+          <Button
+            variant="contained"
+            type="submit"
+            className="btn"
+            color={location.state ? 'warning' : 'success'}
+          >
+            {location.state ? 'Modifier' : 'Ajouter'}
           </Button>
         </form>
       </div>

@@ -5,11 +5,13 @@ import FilteringTable from '../../components/table/FilteringTable/FilteringTable
 import { ColumnFilter } from '../../components/table/FilteringTable/ColumnFilter'
 import Swal from 'sweetalert2'
 import dayjs from 'dayjs'
+import { useSelector } from 'react-redux'
 
 const ListAction = () => {
   const [tournois, setTournois] = useState([])
   const [selected, setSelected] = useState(null)
   const [type, setType] = useState('')
+  const user = useSelector((state) => state.user)
   const navigate = useNavigate()
 
   const getListTournoi = () => {
@@ -29,13 +31,13 @@ const ListAction = () => {
   useEffect(() => {
     if (type === 'Supprimer') {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Etes vous sur ?',
+        text: 'Vous ne pourrez pas revenir en arrière !',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'oui, supprime-le !',
       }).then((result) => {
         if (result.isConfirmed) {
           axios
@@ -45,7 +47,7 @@ const ListAction = () => {
             })
             .then((response) => {
               getListTournoi()
-              Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+              Swal.fire('Supprimé !', 'Votre donnée a été supprimé.', 'success')
             })
         }
       })
@@ -56,7 +58,7 @@ const ListAction = () => {
     <div>
       <FilteringTable
         title={'Liste des Actions'}
-        onDelete={setSelected}
+        onDelete={['SUPER_ADMIN', 'ARBITRE'] && setSelected}
         setType={setType}
         columns={[
           {

@@ -7,11 +7,14 @@ import Swal from 'sweetalert2'
 import FilteringTable from '../../components/table/FilteringTable/FilteringTable'
 import { ColumnFilter } from '../../components/table/FilteringTable/ColumnFilter'
 import dayjs from 'dayjs'
+import { useSelector } from 'react-redux'
 
 const ListUsers = () => {
   const [users, setUsers] = useState([])
   const [selected, setSelected] = useState(null)
   const [type, setType] = useState('')
+  const { user } = useSelector((state) => state)
+
   const navigate = useNavigate()
   const getListUsers = () => {
     axios
@@ -27,16 +30,16 @@ const ListUsers = () => {
     getListUsers()
   }, [])
 
-  const a = () => {
+  useEffect(() => {
     if (type === 'Supprimer') {
       Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: 'Etes vous sur ?',
+        text: 'Vous ne pourrez pas revenir en arrière !',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
+        confirmButtonText: 'oui, supprime-le !',
       }).then((result) => {
         if (result.isConfirmed) {
           axios
@@ -46,25 +49,23 @@ const ListUsers = () => {
             })
             .then((response) => {
               getListUsers()
-              Swal.fire('Deleted!', 'Your file has been deleted.', 'success')
+              Swal.fire('Supprimé !', 'Votre donnée a été supprimé.', 'success')
             })
         }
       })
       setType('')
     }
     if (type === 'Modifier') {
+      console.log('Modifier', selected)
+      navigate('/user', { state: { type: 'Modifier', user: selected } })
     }
-  }
-
-  useEffect(() => {
-    a()
   }, [type])
   return (
     <div>
       <FilteringTable
         title={'Liste des Tournois'}
-        onDelete={setSelected}
-        onUpdate={setSelected}
+        onDelete={['SUPER_ADMIN'].includes(user.role) && setSelected}
+        onUpdate={['SUPER_ADMIN'].includes(user.role) && setSelected}
         setType={setType}
         columns={[
           {

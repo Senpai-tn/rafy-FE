@@ -1,4 +1,11 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material'
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Checkbox,
+  FormLabel,
+} from '@mui/material'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import React from 'react'
@@ -15,8 +22,9 @@ const Action = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [matchs, setMatchs] = useState([])
+  const [checked, setChecked] = useState(false)
 
-  const { control, handleSubmit, setError, reset, watch } = useForm({
+  const { control, handleSubmit, setError, reset, watch, setValue } = useForm({
     defaultValues: {
       match: location.state ? location.state.tournoi.match : null,
       type: location.state ? location.state.tournoi.type : '',
@@ -69,6 +77,10 @@ const Action = () => {
   useEffect(() => {
     getListMatch()
   }, [])
+
+  useEffect(() => {
+    checked ? setValue('temps', 'Score final') : setValue('temps', '')
+  }, [checked])
   return (
     <div>
       <span className="fs-24 font-w800">Ajouter Action</span>
@@ -148,25 +160,35 @@ const Action = () => {
             )}
           />
         )}
-        <Controller
-          control={control}
-          name="temps"
-          render={({ field: { value, onChange }, fieldState: { error } }) => (
-            <div className="form-group" style={{ margin: '10px' }}>
-              <label htmlFor="temps">Temps</label>
-              <input
-                id="temps"
-                value={value}
-                onChange={onChange}
-                type="text"
-                className="form-control input-rounded"
-                placeholder="Temps"
-              />
-              {error && <span style={{ color: 'red' }}>{error.message}</span>}
-            </div>
-          )}
-        />
-
+        {watch('type') === 'score' && (
+          <>
+            <Checkbox
+              checked={checked}
+              onChange={(v) => setChecked(v.target.checked)}
+            />
+            <FormLabel>Score Final</FormLabel>
+          </>
+        )}
+        {checked === false && (
+          <Controller
+            control={control}
+            name="temps"
+            render={({ field: { value, onChange }, fieldState: { error } }) => (
+              <div className="form-group" style={{ margin: '10px' }}>
+                <label htmlFor="temps">Temps</label>
+                <input
+                  id="temps"
+                  value={value}
+                  onChange={onChange}
+                  type="text"
+                  className="form-control input-rounded"
+                  placeholder="Temps"
+                />
+                {error && <span style={{ color: 'red' }}>{error.message}</span>}
+              </div>
+            )}
+          />
+        )}
         <Button variant="contained" type="submit" className="btn btn-primary">
           Ajouter
         </Button>
